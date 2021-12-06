@@ -1,3 +1,5 @@
+// Light/dark mode switch
+
 const background = document.querySelector('main');
 const lightBtn = document.getElementById('light-mode');
 const darkBtn = document.getElementById('dark-mode');
@@ -16,7 +18,20 @@ darkBtn.addEventListener('click', () => {
     setTimeout(() => (darkBtn.style.animation = ''), lightAnimationTime * 1000);
 });
 
+// Tic Tac Toe
+
 const cells = document.querySelectorAll('.cell');
+const statusDisplay = document.querySelector('.move');
+const restartButton = document.querySelector('.game-restart');
+
+let gameActive = true;
+let currentPlayer = 'X';
+let gameState = ['', '', '', '', '', '', '', '', ''];
+
+const winningMessage = () => `Gracz ${currentPlayer} wygrał!`;
+const currentPlayerTurn = () => `Teraz tura gracza ${currentPlayer}`;
+statusDisplay.innerHTML = currentPlayerTurn();
+
 const winConditions = [
     [1, 2, 3],
     [1, 4, 7],
@@ -27,3 +42,33 @@ const winConditions = [
     [4, 5, 6],
     [7, 8, 9],
 ];
+
+function handleCellPlayed(clickedCell, index) {
+    gameState[index] = currentPlayer;
+    clickedCell.innerHTML = currentPlayer;
+}
+
+function handlePlayerChange() {}
+
+function handleResultValidation() {}
+
+function handleCellClick(cellEvent) {
+    const clickedCell = cellEvent.target;
+    const clickedCellIndex = Number(clickedCell.id);
+
+    if (gameState[clickedCellIndex] !== '' || !gameActive) {
+        return;
+    }
+
+    handleCellPlayed(clickedCell, clickedCellIndex);
+    handleResultValidation();
+}
+
+function handleRestartGame() {}
+
+function handleModeChange() {}
+
+function handleCellMove() {}
+
+cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+restartButton.addEventListener('click', handleRestartGame);
