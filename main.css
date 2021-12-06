@@ -131,3 +131,40 @@ main {
 .dark > .mode-wrapper > .mode-icon {
     color: #fff;
 }
+
+.dark > .game-restart {
+    color: #fff;
+}
+
+.dark > .game-restart::after {
+    background-color: #fff;
+}
+
+.game-restart {
+    outline: none;
+    border: none;
+    background-color: transparent;
+    padding: 5px 10px;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: 18px;
+    cursor: pointer;
+    position: relative;
+    color: #333;
+    transition: all 0.4s ease;
+}
+
+.game-restart::after {
+    position: absolute;
+    content: '';
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #333;
+    transition: all 0.4s ease;
+}
+
+.game-restart:hover::after {
+    width: 0%;
+}
