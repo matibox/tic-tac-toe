@@ -23,46 +23,49 @@ darkBtn.addEventListener('click', () => {
 const cells = document.querySelectorAll('.cell');
 const statusDisplay = document.querySelector('.move');
 const restartButton = document.querySelector('.game-restart');
+const winLine = document.querySelector('.win-line');
 
 let gameActive = true;
 let currentPlayer = 'X';
+let currentMove = 0;
 let gameState = ['', '', '', '', '', '', '', '', ''];
 
 const winningMessage = () => `Gracz ${currentPlayer} wygrał!`;
 const currentPlayerTurn = () => `Teraz tura gracza ${currentPlayer}`;
 statusDisplay.innerHTML = currentPlayerTurn();
 
-const winConditions = [
-    [1, 2, 3],
-    [1, 4, 7],
-    [1, 5, 9],
-    [2, 5, 8],
-    [3, 6, 9],
-    [3, 5, 7],
-    [4, 5, 6],
-    [7, 8, 9],
-];
-
-function handleCellPlayed(clickedCell, index) {
-    gameState[index] = currentPlayer;
+function handleCellPlayed(clickedCell, clickedCellIndex) {
+    gameState[clickedCellIndex] = currentPlayer;
     clickedCell.innerHTML = currentPlayer;
 }
 
-function handlePlayerChange() {}
+function handlePlayerChange() {
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    statusDisplay.innerHTML = currentPlayerTurn();
+}
+
+const winningConditions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+];
 
 function handleResultValidation() {
     let roundWon = false;
-    for (let i = 0; i <= winConditions.length; i++) {
-        const winCondition = winConditions[i];
+    for (let i = 0; i <= 7; i++) {
+        const winCondition = winningConditions[i];
         let a = gameState[winCondition[0]];
         let b = gameState[winCondition[1]];
         let c = gameState[winCondition[2]];
-
         if (a === '' || b === '' || c === '') {
             continue;
         }
-
-        if (a == b && b == c) {
+        if (a === b && b === c) {
             roundWon = true;
             break;
         }
@@ -72,21 +75,36 @@ function handleResultValidation() {
         gameActive = false;
         return;
     }
+
+    let roundDraw = !gameState.includes('');
+    if (roundDraw) {
+        statusDisplay.innerHTML = drawMessage();
+        gameActive = false;
+        return;
+    }
+
+    handlePlayerChange();
 }
 
 function handleCellClick(cellEvent) {
     const clickedCell = cellEvent.target;
     const clickedCellIndex = Number(clickedCell.id);
-
     if (gameState[clickedCellIndex] !== '' || !gameActive) {
         return;
     }
 
+    currentMove++;
     handleCellPlayed(clickedCell, clickedCellIndex);
-    handleResultValidation();
+    handleResultValidation(currentMove);
 }
 
-function handleRestartGame() {}
+function handleRestartGame() {
+    gameActive = true;
+    currentPlayer = 'X';
+    gameState = ['', '', '', '', '', '', '', '', ''];
+    statusDisplay.innerHTML = currentPlayerTurn();
+    cells.forEach(cell => (cell.innerHTML = ''));
+}
 
 function handleModeChange() {}
 
