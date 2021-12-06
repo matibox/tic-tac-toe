@@ -15,3 +15,15 @@ darkBtn.addEventListener('click', () => {
     darkBtn.style.animation = `rotation ${lightAnimationTime}s ease-out`;
     setTimeout(() => (darkBtn.style.animation = ''), lightAnimationTime * 1000);
 });
+
+const cells = document.querySelectorAll('.cell');
+const winConditions = [
+    [1, 2, 3],
+    [1, 4, 7],
+    [1, 5, 9],
+    [2, 5, 8],
+    [3, 6, 9],
+    [3, 5, 7],
+    [4, 5, 6],
+    [7, 8, 9],
+];
