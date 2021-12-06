@@ -50,7 +50,29 @@ function handleCellPlayed(clickedCell, index) {
 
 function handlePlayerChange() {}
 
-function handleResultValidation() {}
+function handleResultValidation() {
+    let roundWon = false;
+    for (let i = 0; i <= winConditions.length; i++) {
+        const winCondition = winConditions[i];
+        let a = gameState[winCondition[0]];
+        let b = gameState[winCondition[1]];
+        let c = gameState[winCondition[2]];
+
+        if (a === '' || b === '' || c === '') {
+            continue;
+        }
+
+        if (a == b && b == c) {
+            roundWon = true;
+            break;
+        }
+    }
+    if (roundWon) {
+        statusDisplay.innerHTML = winningMessage();
+        gameActive = false;
+        return;
+    }
+}
 
 function handleCellClick(cellEvent) {
     const clickedCell = cellEvent.target;
