@@ -23,8 +23,6 @@ darkBtn.addEventListener('click', () => {
 const cells = document.querySelectorAll('.cell');
 const statusDisplay = document.querySelector('.move');
 const restartButton = document.querySelector('.game-restart');
-const winLine = document.querySelector('.win-line');
-
 let gameActive = true;
 let currentPlayer = 'X';
 let currentMove = 0;
@@ -32,6 +30,7 @@ let gameState = ['', '', '', '', '', '', '', '', ''];
 
 const winningMessage = () => `Gracz ${currentPlayer} wygrał!`;
 const currentPlayerTurn = () => `Teraz tura gracza ${currentPlayer}`;
+const drawMessage = () => `Gra zakończyła się remisem!`;
 statusDisplay.innerHTML = currentPlayerTurn();
 
 function handleCellPlayed(clickedCell, clickedCellIndex) {
