@@ -8,6 +8,7 @@ switchBtn.addEventListener('click', () => {
 // Tic-tac-toe
 class Game {
     constructor() {
+        this.grid = document.querySelector('.grid');
         this.cells = document.querySelectorAll('.cell');
         this.message = document.querySelector('.current-move');
         this.restartBtn = document.querySelector('.restart-btn');
@@ -25,6 +26,7 @@ class Game {
         this.currentPlayer = 'X';
         this.gameActive = true;
         this.moveCounter = 0;
+        this.moveOrder = [];
         this.boundEventHandler = this.handleCellClick.bind(this);
         this.cells.forEach(cell => {
             cell.addEventListener('click', this.boundEventHandler);
@@ -34,7 +36,8 @@ class Game {
     handleCellClick(cell) {
         if (this.moveCounter >= 5) {
             this.removeClick();
-            console.log('events removed');
+            // console.log('events removed');
+            this.changeGameMode();
         }
         const clickedCell = cell.target;
         const cellIndex = Number(clickedCell.id);
@@ -46,13 +49,9 @@ class Game {
         this.validateResult();
     }
 
-    removeClick() {
-        this.cells.forEach(cell => {
-            cell.removeEventListener('click', this.boundEventHandler);
-        });
-    }
-
     cellPlayed(cell, cellIndex) {
+        this.moveOrder.push(cell);
+        // console.log(this.moveOrder);
         this.gameState[cellIndex] = this.currentPlayer;
         const icon = new Icon(this.currentPlayer, cell);
         icon.placeIcon();
@@ -75,6 +74,12 @@ class Game {
                 continue;
             }
             if (a === b && b === c) {
+                const winningCells = [...this.cells].filter(cell => {
+                    return winCondition.includes(Number(cell.id));
+                });
+                winningCells.forEach(cell => {
+                    cell.classList.add('won');
+                });
                 isWon = true;
                 break;
             }
@@ -101,12 +106,100 @@ class Game {
         this.gameState = ['', '', '', '', '', '', '', '', ''];
         this.currentPlayer = 'X';
         this.message.innerText = 'Teraz tura gracza X';
-        this.cells.forEach(cell => (cell.innerText = ''));
+        this.moveCounter = 0;
+        this.cells.forEach(cell => {
+            cell.addEventListener('click', this.boundEventHandler);
+            cell.innerText = '';
+            cell.className = 'cell';
+        });
+        this.removeDrag();
+        this.currentCellFrom = null;
+        this.moveOrder = [];
+    }
+
+    removeClick() {
+        this.cells.forEach(cell => {
+            cell.removeEventListener('click', this.boundEventHandler);
+        });
+    }
+
+    removeDrag() {
+        this.cells.forEach(cell => cell.removeAttribute('draggable'));
     }
 
     changeGameMode() {
-        console.log('Mode changed');
-        console.log(this.moveCounter);
+        this.moveOrder[0].classList.add('draggable');
+        this.switchPlayer();
+        this.cells.forEach(cell => {
+            cell.setAttribute('draggable', 'true');
+            cell.addEventListener('dragstart', this.dragStart.bind(this));
+            cell.addEventListener('dragend', this.dragEnd.bind(this));
+        });
+
+        this.grid.addEventListener('dragover', this.dragOver.bind(this));
+        this.grid.addEventListener('dragenter', this.dragEnter.bind(this));
+        this.grid.addEventListener('dragleave', this.dragLeave.bind(this));
+        this.grid.addEventListener('drop', this.drop.bind(this));
+    }
+
+    dragStart(e) {
+        const cell = e.target;
+        // console.log('start');
+        this.currentCellFrom = cell;
+    }
+
+    dragEnd(e) {
+        // console.log('end');
+        e.target.classList.remove('draggable');
+        if (this.gameActive) this.moveOrder[0].classList.add('draggable');
+    }
+
+    dragOver(e) {
+        e.preventDefault();
+    }
+
+    dragEnter(e) {
+        e.preventDefault();
+    }
+
+    dragLeave(e) {
+        e.preventDefault();
+    }
+
+    drop(e) {
+        const droppedCell = e.target;
+        const droppedCellIndex = Number(droppedCell.id);
+        if (
+            this.gameState[droppedCellIndex] !== '' ||
+            !this.gameActive ||
+            this.currentCellFrom.innerText !== this.currentPlayer ||
+            !this.checkCurrentDraggableCell(droppedCell)
+        ) {
+            return;
+        }
+
+        this.setAfterDropping(droppedCell, droppedCellIndex);
+        this.validateResult();
+    }
+
+    checkCurrentDraggableCell(currentCellTo) {
+        if (this.moveOrder.indexOf(this.currentCellFrom) === 0) {
+            this.moveOrder.shift();
+            this.moveOrder.push(currentCellTo);
+            // console.log(this.moveOrder);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    setAfterDropping(droppedCell, droppedCellIndex) {
+        droppedCell.className = 'cell';
+        droppedCell.innerText = this.currentPlayer;
+        this.gameState[droppedCellIndex] = this.currentPlayer;
+        this.gameState[Number(this.currentCellFrom.id)] = '';
+        this.currentCellFrom.innerText = '';
+        this.currentCellFrom = null;
     }
 }
 
@@ -122,9 +215,4 @@ class Icon {
 }
 
 const game = new Game();
-/*
-game.cells.forEach(cell => {
-    cell.addEventListener('click', game.handleCellClick.bind(game));
-});
-*/
 game.restartBtn.addEventListener('click', game.restartGame.bind(game));

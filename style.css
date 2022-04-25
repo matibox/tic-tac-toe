@@ -112,6 +112,14 @@ body.dark-mode .restart-btn::after {
     font-size: 3.5rem;
 }
 
+.cell.draggable {
+    color: #ffbc3e;
+}
+
+.cell.won {
+    color: red;
+}
+
 .cell:first-child,
 .cell:nth-child(2),
 .cell:nth-child(4),
