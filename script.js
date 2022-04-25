@@ -24,18 +24,32 @@ class Game {
         this.gameState = ['', '', '', '', '', '', '', '', ''];
         this.currentPlayer = 'X';
         this.gameActive = true;
+        this.moveCounter = 0;
+        this.boundEventHandler = this.handleCellClick.bind(this);
+        this.cells.forEach(cell => {
+            cell.addEventListener('click', this.boundEventHandler);
+        });
     }
 
     handleCellClick(cell) {
+        if (this.moveCounter >= 5) {
+            this.removeClick();
+            console.log('events removed');
+        }
         const clickedCell = cell.target;
         const cellIndex = Number(clickedCell.id);
-        console.log(this.gameActive);
         if (this.gameState[cellIndex] !== '' || !this.gameActive) {
             return;
         }
 
         this.cellPlayed(clickedCell, cellIndex);
         this.validateResult();
+    }
+
+    removeClick() {
+        this.cells.forEach(cell => {
+            cell.removeEventListener('click', this.boundEventHandler);
+        });
     }
 
     cellPlayed(cell, cellIndex) {
@@ -79,6 +93,7 @@ class Game {
         }
 
         this.currentPlayer = this.switchPlayer();
+        this.moveCounter++;
     }
 
     restartGame() {
@@ -87,6 +102,11 @@ class Game {
         this.currentPlayer = 'X';
         this.message.innerText = 'Teraz tura gracza X';
         this.cells.forEach(cell => (cell.innerText = ''));
+    }
+
+    changeGameMode() {
+        console.log('Mode changed');
+        console.log(this.moveCounter);
     }
 }
 
@@ -102,9 +122,9 @@ class Icon {
 }
 
 const game = new Game();
-
+/*
 game.cells.forEach(cell => {
     cell.addEventListener('click', game.handleCellClick.bind(game));
 });
-
+*/
 game.restartBtn.addEventListener('click', game.restartGame.bind(game));
