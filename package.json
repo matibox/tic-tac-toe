@@ -2,14 +2,22 @@
     "name": "tic-tac-toe",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "private": "true",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "webpack --config webpack.config.js"
     },
     "repository": {
         "type": "git",
         "url": "tic-tac-toe"
     },
     "author": "Mateusz Hladky",
-    "license": "ISC"
+    "license": "MIT",
+    "dependencies": {
+        "drag-drop-polyfill": "^2.0.0-rc.0"
+    },
+    "devDependencies": {
+        "webpack": "^5.72.0",
+        "webpack-cli": "^4.9.2"
+    }
 }

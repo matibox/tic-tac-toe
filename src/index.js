@@ -1,3 +1,9 @@
+import { polyfill } from 'drag-drop-polyfill';
+import { scrollBehaviourDragImageTranslateOverride } from 'drag-drop-polyfill';
+polyfill({
+    dragImageTranslateOverride: scrollBehaviourDragImageTranslateOverride,
+});
+
 // Light/Dark mode switch
 const switchBtn = document.querySelector('.dark-mode-btn');
 switchBtn.addEventListener('click', () => {
@@ -135,7 +141,6 @@ class Game {
             cell.addEventListener('dragstart', this.dragStart.bind(this));
             cell.addEventListener('dragend', this.dragEnd.bind(this));
         });
-
         this.grid.addEventListener('dragover', this.dragOver.bind(this));
         this.grid.addEventListener('dragenter', this.dragEnter.bind(this));
         this.grid.addEventListener('dragleave', this.dragLeave.bind(this));
