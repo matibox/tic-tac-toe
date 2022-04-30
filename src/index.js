@@ -1,5 +1,6 @@
 import { polyfill } from 'drag-drop-polyfill';
 import { scrollBehaviourDragImageTranslateOverride } from 'drag-drop-polyfill';
+
 polyfill({
     dragImageTranslateOverride: scrollBehaviourDragImageTranslateOverride,
 });
