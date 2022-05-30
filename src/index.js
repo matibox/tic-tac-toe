@@ -7,6 +7,17 @@ polyfill({
 
 // Light/Dark mode switch
 const switchBtn = document.querySelector('.dark-mode-btn');
+
+// Default scheme
+
+if (
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+) {
+    switchBtn.classList.add('dark-mode');
+    document.body.classList.add('dark-mode');
+}
+
 switchBtn.addEventListener('click', () => {
     switchBtn.classList.toggle('dark-mode');
     document.body.classList.toggle('dark-mode');
@@ -152,6 +163,7 @@ class Game {
         const cell = e.target;
         // console.log('start');
         this.currentCellFrom = cell;
+        console.log('yes');
     }
 
     dragEnd(e) {
